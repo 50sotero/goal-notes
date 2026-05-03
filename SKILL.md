@@ -1,57 +1,88 @@
 ---
 name: goal-notes
-description: Capture persistent notes and improvement points whenever a user invokes /goal or asks to manage goal memory, so future Codex sessions inherit useful objective context without storing secrets.
+description: Capture persistent project-level goal notes, acceptance reminders, and improvement points for any AI assistant, CLI, or automation workflow without storing secrets.
 metadata:
-  short-description: Persist goal context and improvement notes
+  short-description: Persist project-level goal context for future assistant sessions
 ---
 
 # Goal Notes
 
-Use this skill whenever the user invokes `/goal`, asks to start or update an explicit goal, or asks to preserve lessons/improvement points for future sessions.
+Use this skill whenever a user invokes `/goal`, asks to preserve goal memory, or wants future assistant sessions to inherit concise objective context and verification reminders.
 
-## Purpose
+Goal Notes is assistant-neutral: the reusable CLI writes local project memory for any shell, CI job, Claude/Gemini/OpenCode workflow, or Codex/OMX hook while preserving the legacy Codex hook entrypoint.
 
-Goal notes are lightweight continuity records. They preserve:
-- the goal text and repo/session context,
-- concrete acceptance criteria or verification reminders,
-- risks, assumptions, and follow-up improvements discovered while working,
-- completion evidence when a goal finishes.
+## What to capture
 
-They do **not** replace the normal goal tool/state. They add durable memory for future agents.
+Keep notes short, private, and actionable:
 
-## Storage
+- Objective and acceptance criteria after `/goal` or an explicit goal request.
+- Repo/workspace context, branch, source runtime, and session id when available.
+- Future-session reminders, risks, unresolved decisions, and verification evidence.
+- Improvement points that would prevent a future assistant from repeating mistakes.
 
-Prefer project-local storage when a repository/workspace is available:
-- Markdown ledger: `.omx/goal-notes.md`
-- Machine-readable event log: `.omx/goal-notes.jsonl`
+Do not store transcripts, secrets, credentials, QR contents, raw invoices, or unnecessary personal data.
 
-If no project root can be resolved, fall back to:
-- `~/.codex/goal-notes/goal-notes.md`
-- `~/.codex/goal-notes/goal-notes.jsonl`
+## Universal CLI usage
 
-## Workflow
+Run from any project or pass `--cwd` explicitly:
 
-1. Detect the goal request.
-   - Strong trigger: prompt begins with `/goal` or contains a standalone `/goal ...` line.
-   - Also use this skill for explicit goal retrospectives, goal handoffs, and future-session improvement notes.
-2. Capture only useful continuity context.
-   - Objective: the requested goal text after `/goal`.
-   - Context: cwd, git root, branch, and session id if available.
-   - Improvement points: risks, reminders, checks to run, UX/product lessons, and unresolved decisions.
-3. Redact sensitive data.
-   - Do not store secrets, tokens, credentials, auth cookies, QR contents, raw invoices, or unnecessary personal data.
-   - Replace likely sensitive values with `[redacted]`.
-4. Keep notes short and actionable.
-   - Prefer bullets future agents can execute.
-   - Avoid narrative transcripts.
-5. On completion, append final evidence.
-   - Tests/builds run, files changed, commits/PRs, known gaps.
+```bash
+node scripts/goal-notes.js capture --goal "Ship address matching" --source shell
+node scripts/goal-notes.js capture --goal "Review OCR gaps" --prompt "$PROMPT" --source claude
+node scripts/goal-notes.js capture --goal "CI release verification" --source ci --quiet
+```
 
-## Hook automation
+Useful flags:
 
-This skill includes `scripts/goal-notes-hook.js`, a non-blocking Codex native `UserPromptSubmit` hook helper. It reads the hook JSON from stdin, records `/goal` prompts, and exits `0` without emitting stdout so existing hooks can continue normally.
+- `--goal` — objective text to persist.
+- `--prompt` — original prompt excerpt; `/goal ...` is extracted when `--goal` is omitted.
+- `--source` — runtime label such as `shell`, `claude`, `gemini`, `opencode`, `ci`, or `codex-native`.
+- `--cwd` — project/workspace directory used for root detection.
+- `--store universal|omx|auto` — explicit storage target.
+- `--quiet` — suppress human CLI success output.
 
-Install/wire it by adding a separate `UserPromptSubmit` command hook before or after existing hooks:
+`GOAL_NOTES_STORE` can set the store when `--store` is not provided. Invalid stores fail closed for human CLI usage.
+
+## Storage model
+
+Default universal storage is project-level and private-by-default:
+
+- Markdown ledger: `.goal-notes/goal-notes.md`
+- Machine-readable log: `.goal-notes/goal-notes.jsonl`
+
+Project root resolution uses the nearest Git root first, then common project markers such as `package.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`, `AGENTS.md`, or `.project`, then the supplied cwd.
+
+If the cwd is unavailable, universal storage falls back to `$GOAL_NOTES_HOME` or `~/.goal-notes`. The Codex/OMX adapter falls back to `~/.codex/goal-notes`.
+
+No mirroring, migration, or split writes happen automatically. Each invocation writes to exactly one deterministic store. `--store auto` uses existing `.omx/goal-notes.md` or `.omx/goal-notes.jsonl` only when one already exists; a bare `.omx/` directory is not enough.
+
+## Privacy limits
+
+For universal project storage, the CLI creates `.goal-notes/.gitignore`:
+
+```gitignore
+# Goal Notes stores private local assistant memory here.
+*
+!.gitignore
+```
+
+The repository `.gitignore` should also ignore `.goal-notes/`. Note payload files are appended with `0o600` permissions where the filesystem supports it.
+
+Redaction is best-effort, not a security boundary. It covers common token/secret patterns, CPF, CNPJ, and long numeric strings, but users and agents should still avoid putting sensitive material in goals.
+
+## Runtime adapters
+
+### Generic shell/manual capture
+
+```bash
+node scripts/goal-notes.js capture --goal "Document release acceptance gates" --source shell
+```
+
+### Codex native hook / OMX compatibility
+
+`scripts/goal-notes-hook.js` remains the stable Codex hook entrypoint. It delegates to the universal CLI in hook mode, stays stdout-silent, exits `0` on hook failures, and keeps the legacy project default `.omx/goal-notes.{md,jsonl}`.
+
+Example hook command:
 
 ```json
 {
@@ -60,18 +91,38 @@ Install/wire it by adding a separate `UserPromptSubmit` command hook before or a
 }
 ```
 
-The helper is intentionally best-effort: failures are logged to stderr and never block the user prompt.
+### Claude / Claude Code
 
-## Manual note pattern
+```bash
+node scripts/goal-notes.js capture --goal "Summarize checkout risks" --source claude --cwd "$PWD"
+```
 
-When manually adding a goal note, use this compact shape:
+### Gemini / OpenCode
+
+```bash
+node scripts/goal-notes.js capture --goal "Track Android QA blockers" --source gemini --cwd "$PWD"
+node scripts/goal-notes.js capture --goal "Persist refactor acceptance" --source opencode --cwd "$PWD"
+```
+
+### CI or post-task summary
+
+```bash
+node scripts/goal-notes.js capture --goal "Release verified on staging" --source ci --quiet --cwd "$GITHUB_WORKSPACE"
+```
+
+## Manual note shape
+
+When manually adding a goal note, keep this compact structure:
 
 ```markdown
 ## 2026-05-03T12:34:56.000Z — goal
 - Objective: implement X
-- Context: repo `/path`, branch `feature/x`
-- Acceptance: test Y passes; browser flow Z verified
-- Improvement points:
-  - Future agents should inspect A before changing B.
-  - Avoid C unless D is verified.
+- Source: shell
+- Store: universal
+- Project: `/path/to/project`
+- Cwd: `/path/to/project`
+- Branch: `feature/x`
+- Future-session reminders:
+  - Preserve user intent and acceptance criteria before implementation.
+  - Record verification evidence and unresolved risks before completion.
 ```
