@@ -93,26 +93,54 @@ That means:
 
 ## Install
 
-### Use from this checkout
+### For humans
+
+If you just want to try Goal Notes in a project, clone the repo and run the universal CLI:
 
 ```bash
+git clone https://github.com/50sotero/goal-notes.git
+cd goal-notes
 node scripts/goal-notes.js capture --goal "Document release gates" --source shell
 ```
 
-### Install as a local Codex skill
+To use it from another project without installing hooks, call the script with that project as `--cwd`:
+
+```bash
+node /path/to/goal-notes/scripts/goal-notes.js capture \
+  --goal "Keep release acceptance criteria visible" \
+  --source shell \
+  --cwd /path/to/your/project
+```
+
+This writes private project memory to `/path/to/your/project/.goal-notes/` by default.
+
+### For agents
+
+If you are an AI coding agent installing Goal Notes for future sessions, copy the skill into the local Codex skills directory:
 
 ```bash
 mkdir -p ~/.codex/skills/goal-notes
 cp -a SKILL.md scripts agents ~/.codex/skills/goal-notes/
 ```
 
-Then wire the stable hook entrypoint in your Codex hooks config:
+Then wire the stable hook entrypoint in the Codex hooks config:
 
 ```json
 {
   "type": "command",
   "command": "node \"/home/victo/.codex/skills/goal-notes/scripts/goal-notes-hook.js\""
 }
+```
+
+Agent install checklist:
+
+```bash
+python3 -m json.tool ~/.codex/hooks.json >/dev/null
+node ~/.codex/skills/goal-notes/scripts/goal-notes.js capture \
+  --goal "agent install smoke" \
+  --source shell \
+  --quiet \
+  --cwd "$PWD"
 ```
 
 The wrapper is intentionally boring: it reads Codex hook JSON from stdin, delegates to the universal CLI, writes legacy `.omx/goal-notes.{md,jsonl}`, emits no stdout, and exits `0` on hook failures so prompt submission is never blocked.
