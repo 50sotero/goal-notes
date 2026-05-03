@@ -1,0 +1,3 @@
+display_name: Goal Notes
+short_description: Persist /goal context and improvement points for future sessions.
+default_prompt: Capture the current /goal request as durable goal notes, including objective, context, acceptance reminders, improvement points, and verification evidence without storing secrets.
