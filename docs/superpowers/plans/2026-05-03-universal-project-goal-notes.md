@@ -85,7 +85,7 @@ Do **not** add package dependencies, npm package scaffolding, fuzzy goal detecti
 - Create: `tests/goal-notes.test.js`
 - Reference: `scripts/goal-notes-hook.js`
 
-- [ ] **Step 1: Create test helpers**
+- [x] **Step 1: Create test helpers**
 
 Create `tests/goal-notes.test.js` with Node built-ins only:
 
@@ -120,7 +120,7 @@ function runNode(args, options = {}) {
 }
 ```
 
-- [ ] **Step 2: Write the failing generic project-level capture test**
+- [x] **Step 2: Write the failing generic project-level capture test**
 
 Add:
 
@@ -148,7 +148,7 @@ it('capture writes universal project-level goal notes by default', () => {
 });
 ```
 
-- [ ] **Step 3: Run test to verify RED**
+- [x] **Step 3: Run test to verify RED**
 
 Run:
 
@@ -163,7 +163,7 @@ Expected: FAIL because `scripts/goal-notes.js` does not exist yet.
 **Files:**
 - Modify: `tests/goal-notes.test.js`
 
-- [ ] **Step 1: Add a failing test for `.goal-notes/.gitignore` and ignored payloads**
+- [x] **Step 1: Add a failing test for `.goal-notes/.gitignore` and ignored payloads**
 
 Add:
 
@@ -181,7 +181,7 @@ it('universal project storage keeps note payloads ignored in git projects', () =
 });
 ```
 
-- [ ] **Step 2: Run test to verify RED**
+- [x] **Step 2: Run test to verify RED**
 
 Run:
 
@@ -196,7 +196,7 @@ Expected: FAIL until the CLI creates the sentinel and note payloads.
 **Files:**
 - Modify: `tests/goal-notes.test.js`
 
-- [ ] **Step 1: Add a failing test for the existing wrapper defaulting to `.omx`**
+- [x] **Step 1: Add a failing test for the existing wrapper defaulting to `.omx`**
 
 Add:
 
@@ -220,7 +220,7 @@ it('compatibility hook remains stdout-silent and writes legacy omx project notes
 });
 ```
 
-- [ ] **Step 2: Add a failing test for non-goal prompts**
+- [x] **Step 2: Add a failing test for non-goal prompts**
 
 Add:
 
@@ -236,7 +236,7 @@ it('compatibility hook ignores non-goal prompts', () => {
 });
 ```
 
-- [ ] **Step 3: Run tests to verify RED/PRESERVE expectations**
+- [x] **Step 3: Run tests to verify RED/PRESERVE expectations**
 
 Run:
 
@@ -256,7 +256,7 @@ Expected: Some tests may currently pass through the old wrapper; new CLI-depende
 - Create: `scripts/goal-notes.js`
 - Modify: `tests/goal-notes.test.js`
 
-- [ ] **Step 1: Create the script skeleton**
+- [x] **Step 1: Create the script skeleton**
 
 Create `scripts/goal-notes.js`:
 
@@ -300,7 +300,7 @@ if (isMain()) {
 }
 ```
 
-- [ ] **Step 2: Run syntax check**
+- [x] **Step 2: Run syntax check**
 
 Run:
 
@@ -316,7 +316,7 @@ Expected: PASS once the skeleton is syntactically valid.
 - Modify: `scripts/goal-notes.js`
 - Modify: `tests/goal-notes.test.js`
 
-- [ ] **Step 1: Add tests for invalid store behavior**
+- [x] **Step 1: Add tests for invalid store behavior**
 
 Add:
 
@@ -343,14 +343,14 @@ it('hook mode warns and exits zero for invalid stores without writing', () => {
 });
 ```
 
-- [ ] **Step 2: Implement minimal parser**
+- [x] **Step 2: Implement minimal parser**
 
 Implement a small parser that supports:
 - command: `capture` or `hook`
 - flags: `--goal`, `--prompt`, `--source`, `--cwd`, `--quiet`, `--store`, `--format`
 - store resolution: `--store` > `GOAL_NOTES_STORE` > command default
 
-- [ ] **Step 3: Run invalid-store tests**
+- [x] **Step 3: Run invalid-store tests**
 
 Run:
 
@@ -366,7 +366,7 @@ Expected: PASS.
 - Modify: `scripts/goal-notes.js`
 - Modify: `tests/goal-notes.test.js`
 
-- [ ] **Step 1: Add redaction test**
+- [x] **Step 1: Add redaction test**
 
 Add:
 
@@ -386,7 +386,7 @@ it('redacts secrets and Brazilian document identifiers', () => {
 });
 ```
 
-- [ ] **Step 2: Move existing redaction into reusable functions**
+- [x] **Step 2: Move existing redaction into reusable functions**
 
 Implement:
 - `redact(text)`
@@ -396,7 +396,7 @@ Implement:
 
 Preserve existing redaction rules.
 
-- [ ] **Step 3: Run redaction tests**
+- [x] **Step 3: Run redaction tests**
 
 Run:
 
@@ -412,7 +412,7 @@ Expected: PASS.
 - Modify: `scripts/goal-notes.js`
 - Modify: `tests/goal-notes.test.js`
 
-- [ ] **Step 1: Add tests for project marker resolution and global fallback**
+- [x] **Step 1: Add tests for project marker resolution and global fallback**
 
 Add tests that prove:
 - a nested cwd under a Git repo writes to the Git root `.goal-notes/`;
@@ -434,7 +434,7 @@ it('capture writes at the nearest git project root from nested cwd', () => {
 });
 ```
 
-- [ ] **Step 2: Implement root resolution**
+- [x] **Step 2: Implement root resolution**
 
 Implement `resolveProjectRoot(cwd)`:
 1. use explicit `--cwd` if supplied as starting point;
@@ -443,7 +443,7 @@ Implement `resolveProjectRoot(cwd)`:
 4. fallback to starting cwd;
 5. global fallback only when cwd is invalid/unavailable or caller chooses future global mode.
 
-- [ ] **Step 3: Implement store path resolution**
+- [x] **Step 3: Implement store path resolution**
 
 Implement:
 - `resolveStore({ store, command, cwd, env })`
@@ -452,7 +452,7 @@ Implement:
 - universal global fallback: `$GOAL_NOTES_HOME` else `~/.goal-notes`
 - omx global fallback: `~/.codex/goal-notes`
 
-- [ ] **Step 4: Run storage tests**
+- [x] **Step 4: Run storage tests**
 
 Run:
 
@@ -467,7 +467,7 @@ Expected: PASS.
 **Files:**
 - Modify: `scripts/goal-notes.js`
 
-- [ ] **Step 1: Implement note serialization**
+- [x] **Step 1: Implement note serialization**
 
 Generate Markdown entries shaped like:
 
@@ -503,7 +503,7 @@ Generate JSONL with at least:
 }
 ```
 
-- [ ] **Step 2: Implement private append**
+- [x] **Step 2: Implement private append**
 
 Implement append behavior:
 - create store directory recursively;
@@ -518,7 +518,7 @@ Implement append behavior:
 - append Markdown and JSONL with mode `0o600` where Node supports it;
 - do not print from core functions.
 
-- [ ] **Step 3: Run generic capture and privacy tests**
+- [x] **Step 3: Run generic capture and privacy tests**
 
 Run:
 
@@ -538,7 +538,7 @@ Expected: PASS.
 - Modify: `scripts/goal-notes.js`
 - Modify: `tests/goal-notes.test.js`
 
-- [ ] **Step 1: Add malformed JSON and stdout silence tests**
+- [x] **Step 1: Add malformed JSON and stdout silence tests**
 
 Add:
 
@@ -553,7 +553,7 @@ it('hook mode handles malformed JSON without failing or stdout', () => {
 });
 ```
 
-- [ ] **Step 2: Implement hook parsing**
+- [x] **Step 2: Implement hook parsing**
 
 Implement `runHookCodexNative({ stdin, env, cwd, stdout, stderr })`:
 - parse stdin JSON best-effort;
@@ -566,7 +566,7 @@ Implement `runHookCodexNative({ stdin, env, cwd, stdout, stderr })`:
 - never write stdout;
 - exit status `0` for malformed JSON and invalid store in hook mode.
 
-- [ ] **Step 3: Run hook-mode tests**
+- [x] **Step 3: Run hook-mode tests**
 
 Run:
 
@@ -581,7 +581,7 @@ Expected: PASS.
 **Files:**
 - Modify: `scripts/goal-notes-hook.js`
 
-- [ ] **Step 1: Replace monolith with delegator**
+- [x] **Step 1: Replace monolith with delegator**
 
 Make `scripts/goal-notes-hook.js`:
 - read stdin once;
@@ -616,7 +616,7 @@ try {
 }
 ```
 
-- [ ] **Step 2: Run wrapper tests**
+- [x] **Step 2: Run wrapper tests**
 
 Run:
 
@@ -626,7 +626,7 @@ node --test tests/goal-notes.test.js --test-name-pattern "compatibility hook|non
 
 Expected: PASS.
 
-- [ ] **Step 3: Syntax check scripts**
+- [x] **Step 3: Syntax check scripts**
 
 Run:
 
@@ -647,7 +647,7 @@ Expected: PASS.
 - Modify: `scripts/goal-notes.js`
 - Modify: `tests/goal-notes.test.js`
 
-- [ ] **Step 1: Add `GOAL_NOTES_STORE=omx` test for capture**
+- [x] **Step 1: Add `GOAL_NOTES_STORE=omx` test for capture**
 
 Add:
 
@@ -665,7 +665,7 @@ it('GOAL_NOTES_STORE can route generic capture to omx storage', () => {
 });
 ```
 
-- [ ] **Step 2: Add `auto` existing-file behavior test**
+- [x] **Step 2: Add `auto` existing-file behavior test**
 
 Add:
 
@@ -689,7 +689,7 @@ it('auto store uses existing legacy goal-note files but ignores bare .omx direct
 });
 ```
 
-- [ ] **Step 3: Run env/auto tests**
+- [x] **Step 3: Run env/auto tests**
 
 Run:
 
@@ -705,7 +705,7 @@ Expected: PASS.
 - Modify: `scripts/goal-notes.js`
 - Modify: `tests/goal-notes.test.js`
 
-- [ ] **Step 1: Add global fallback test**
+- [x] **Step 1: Add global fallback test**
 
 Because project-level storage should be the default, only use global fallback when cwd is invalid/unavailable or when implementation exposes an explicit global mode later. For this pass, test invalid cwd fallback:
 
@@ -724,13 +724,13 @@ it('GOAL_NOTES_HOME controls universal global fallback when cwd is unavailable',
 });
 ```
 
-- [ ] **Step 2: Implement invalid cwd fallback**
+- [x] **Step 2: Implement invalid cwd fallback**
 
 If `--cwd` is invalid/unavailable:
 - universal store falls back to `$GOAL_NOTES_HOME` else `~/.goal-notes`;
 - omx store falls back to `~/.codex/goal-notes`.
 
-- [ ] **Step 3: Run home fallback test**
+- [x] **Step 3: Run home fallback test**
 
 Run:
 
@@ -749,7 +749,7 @@ Expected: PASS.
 **Files:**
 - Modify: `SKILL.md`
 
-- [ ] **Step 1: Replace Codex-only description**
+- [x] **Step 1: Replace Codex-only description**
 
 Update frontmatter description to avoid Codex-only framing, for example:
 
@@ -757,7 +757,7 @@ Update frontmatter description to avoid Codex-only framing, for example:
 description: Capture persistent project-level goal notes, acceptance reminders, and improvement points for any AI assistant, CLI, or automation workflow without storing secrets.
 ```
 
-- [ ] **Step 2: Document universal usage first**
+- [x] **Step 2: Document universal usage first**
 
 Include examples:
 
@@ -767,7 +767,7 @@ node scripts/goal-notes.js capture --goal "Review OCR gaps" --prompt "$PROMPT" -
 node scripts/goal-notes.js capture --goal "CI release verification" --source ci --quiet
 ```
 
-- [ ] **Step 3: Document project-level storage**
+- [x] **Step 3: Document project-level storage**
 
 State:
 - default universal project storage is `.goal-notes/` at project root;
@@ -775,7 +775,7 @@ State:
 - global fallback is only for missing project context or explicit future global use;
 - no mirroring/migration occurs automatically.
 
-- [ ] **Step 4: Document privacy limits**
+- [x] **Step 4: Document privacy limits**
 
 State:
 - `.goal-notes/.gitignore` is created to ignore payloads;
@@ -783,7 +783,7 @@ State:
 - redaction is best-effort, not a security boundary;
 - users should avoid putting secrets, credentials, QR contents, invoices, or unnecessary personal data in goals.
 
-- [ ] **Step 5: Document adapters**
+- [x] **Step 5: Document adapters**
 
 Include sections for:
 - generic shell/manual capture;
@@ -792,7 +792,7 @@ Include sections for:
 - Gemini/OpenCode manual command;
 - CI/post-task summary.
 
-- [ ] **Step 6: Document compatibility wrapper**
+- [x] **Step 6: Document compatibility wrapper**
 
 State that `scripts/goal-notes-hook.js` remains the stable Codex hook entrypoint.
 
@@ -801,7 +801,7 @@ State that `scripts/goal-notes-hook.js` remains the stable Codex hook entrypoint
 **Files:**
 - Modify: `agents/openai.yaml`
 
-- [ ] **Step 1: Make metadata universal-friendly**
+- [x] **Step 1: Make metadata universal-friendly**
 
 Update values similar to:
 
@@ -811,7 +811,7 @@ short_description: Persist project-level goal context for future assistant sessi
 default_prompt: Capture this goal as local project memory with acceptance reminders, improvement points, and privacy-safe redaction.
 ```
 
-- [ ] **Step 2: Validate YAML syntax manually**
+- [x] **Step 2: Validate YAML syntax manually**
 
 Run:
 
@@ -830,7 +830,7 @@ Expected: prints parsed metadata object.
 **Files:**
 - Modify: `.gitignore`
 
-- [ ] **Step 1: Add `.goal-notes/`**
+- [x] **Step 1: Add `.goal-notes/`**
 
 Ensure `.gitignore` contains:
 
@@ -840,7 +840,7 @@ Ensure `.gitignore` contains:
 .DS_Store
 ```
 
-- [ ] **Step 2: Confirm repo status ignores generated plan stores**
+- [x] **Step 2: Confirm repo status ignores generated plan stores**
 
 Run from repo root after any manual sample capture:
 
@@ -859,7 +859,7 @@ Expected: generated note stores are ignored, source files are not accidentally i
 **Files:**
 - All changed files
 
-- [ ] **Step 1: Run full Node tests**
+- [x] **Step 1: Run full Node tests**
 
 Run:
 
@@ -869,7 +869,7 @@ node --test
 
 Expected: PASS for all tests.
 
-- [ ] **Step 2: Run syntax checks**
+- [x] **Step 2: Run syntax checks**
 
 Run:
 
@@ -880,7 +880,7 @@ node -c scripts/goal-notes-hook.js
 
 Expected: PASS.
 
-- [ ] **Step 3: Run generic CLI sample in temp dir**
+- [x] **Step 3: Run generic CLI sample in temp dir**
 
 Run:
 
@@ -896,7 +896,7 @@ rm -rf "$tmp"
 
 Expected: command prints success, note exists, Git ignores payload.
 
-- [ ] **Step 4: Run Codex hook sample in temp dir**
+- [x] **Step 4: Run Codex hook sample in temp dir**
 
 Run:
 
@@ -912,7 +912,7 @@ rm -rf "$tmp"
 
 Expected: stdout empty, legacy `.omx` note exists.
 
-- [ ] **Step 5: Run skill validation if installed validator exists**
+- [x] **Step 5: Run skill validation if installed validator exists**
 
 Run:
 
@@ -932,7 +932,7 @@ Expected: `Skill is valid!` or explicit skip.
 - Local install target: `/home/victo/.codex/skills/goal-notes`
 - Hook config: `/home/victo/.codex/hooks.json`
 
-- [ ] **Step 1: Copy updated skill files to local install**
+- [x] **Step 1: Copy updated skill files to local install**
 
 Run:
 
@@ -942,7 +942,7 @@ mkdir -p /home/victo/.codex/skills/goal-notes
 cp -a SKILL.md scripts agents /home/victo/.codex/skills/goal-notes/
 ```
 
-- [ ] **Step 2: Validate installed skill**
+- [x] **Step 2: Validate installed skill**
 
 Run:
 
@@ -952,7 +952,7 @@ python3 /home/victo/.codex/skills/.system/skill-creator/scripts/quick_validate.p
 
 Expected: `Skill is valid!`
 
-- [ ] **Step 3: Verify hooks config still points to wrapper and parses**
+- [x] **Step 3: Verify hooks config still points to wrapper and parses**
 
 Run:
 
@@ -963,7 +963,7 @@ grep -F '/home/victo/.codex/skills/goal-notes/scripts/goal-notes-hook.js' /home/
 
 Expected: JSON parse succeeds and grep finds the wrapper path.
 
-- [ ] **Step 4: Run installed wrapper smoke test**
+- [x] **Step 4: Run installed wrapper smoke test**
 
 Run:
 
@@ -990,7 +990,7 @@ Expected: stdout empty and `.omx` note created.
 - `tests/goal-notes.test.js`
 - `docs/superpowers/plans/2026-05-03-universal-project-goal-notes.md`
 
-- [ ] **Step 1: Review diff**
+- [x] **Step 1: Review diff**
 
 Run:
 
@@ -1001,7 +1001,7 @@ git status --short
 
 Expected: only intended files changed.
 
-- [ ] **Step 2: Stage intended files**
+- [x] **Step 2: Stage intended files**
 
 Run:
 
@@ -1009,7 +1009,7 @@ Run:
 git add .gitignore SKILL.md agents/openai.yaml scripts/goal-notes.js scripts/goal-notes-hook.js tests/goal-notes.test.js docs/superpowers/plans/2026-05-03-universal-project-goal-notes.md
 ```
 
-- [ ] **Step 3: Commit with Lore protocol as Victor**
+- [x] **Step 3: Commit with Lore protocol as Victor**
 
 Run:
 
@@ -1028,7 +1028,7 @@ git commit -m "Make goal notes portable across assistant workflows" \
   -m "Not-tested: Published package-manager install path; no package manager distribution exists yet."
 ```
 
-- [ ] **Step 4: Push**
+- [x] **Step 4: Push**
 
 Run:
 
@@ -1042,15 +1042,15 @@ Expected: push succeeds to `https://github.com/50sotero/goal-notes`.
 
 ## Definition of Done
 
-- [ ] `SKILL.md` no longer frames the project as Codex-only.
-- [ ] Generic users can run one Node command and write project-level `.goal-notes/` notes.
-- [ ] Universal project-level note payloads are ignored in arbitrary Git repos by default.
-- [ ] Existing Codex hook wrapper remains stdout-silent and writes project-level `.omx/` notes by default.
-- [ ] Store precedence and `auto` behavior are documented and tested.
-- [ ] Invalid store behavior is safe and tested.
-- [ ] Tests use only temp directories and do not write real user `.omx`, `.codex`, or home stores.
-- [ ] Local Codex install is updated after repo-safe tests pass.
-- [ ] Lore commit authored by `Victor Sotero <victor.sotero@ic.ufal.br>` is pushed.
+- [x] `SKILL.md` no longer frames the project as Codex-only.
+- [x] Generic users can run one Node command and write project-level `.goal-notes/` notes.
+- [x] Universal project-level note payloads are ignored in arbitrary Git repos by default.
+- [x] Existing Codex hook wrapper remains stdout-silent and writes project-level `.omx/` notes by default.
+- [x] Store precedence and `auto` behavior are documented and tested.
+- [x] Invalid store behavior is safe and tested.
+- [x] Tests use only temp directories and do not write real user `.omx`, `.codex`, or home stores.
+- [x] Local Codex install is updated after repo-safe tests pass.
+- [x] Lore commit authored by `Victor Sotero <victor.sotero@ic.ufal.br>` is pushed.
 
 ## Non-goals
 
